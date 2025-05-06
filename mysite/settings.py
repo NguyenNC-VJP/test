@@ -22,15 +22,12 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # mặc định của Django
     'django.contrib.admin',            # Giao diện admin mặc định của Django
     'django.contrib.auth',             # Hệ thống xác thực người dùng
     'django.contrib.contenttypes',     # Theo dõi các model được cài đặt
     'django.contrib.sessions',         # Hỗ trợ session (đăng nhập, giỏ hàng,...)
     'django.contrib.messages',         # Hệ thống hiển thị thông báo
     'django.contrib.staticfiles',      # Hỗ trợ quản lý static files (CSS, JS,...)
-    # app của mình
-    'accounts',
 ]
 # =======================================================================================
 # Middleware là các lớp xử lý request/response theo thứ tự
@@ -120,4 +117,3 @@ STATIC_URL = '/static/'
 # Kiểu trường id mặc định cho các model mới (BigAutoField = bigint, chống tràn số nếu bảng lớn)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # =======================================================================================
-AUTH_USER_MODEL = 'accounts.CustomUser'
