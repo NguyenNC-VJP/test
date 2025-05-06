@@ -1,6 +1,6 @@
 from pathlib import Path
 import os
-
+#Đã fixed!
 # =======================================================================================
 # Xây dựng đường dẫn đến thư mục gốc của project
 BASE_DIR = Path(__file__).resolve().parent.parent
