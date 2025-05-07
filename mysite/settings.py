@@ -1,33 +1,19 @@
-# mysite/settings.py
-import os
-from dotenv import load_dotenv
 from pathlib import Path
-
+import os
+#Đã fixed!
 # =======================================================================================
 # Xây dựng đường dẫn đến thư mục gốc của project
 BASE_DIR = Path(__file__).resolve().parent.parent
-# =======================================================================================
-# Lấy tên môi trường từ biến hệ thống: DJANGO_ENV
-env_name = os.getenv('DJANGO_ENV', 'development').lower()
-# =======================================================================================
-# Load file .env tương ứng
-dotenv_path = BASE_DIR / f'.env.{env_name}'
-load_dotenv(dotenv_path)
-# =======================================================================================
-# Bật chế độ debug – chỉ dùng khi phát triển, KHÔNG nên bật ở production
-DEBUG = True
 
-USE_REAL_API = os.getenv('USE_REAL_API', 'false') == 'true'
-
-if USE_REAL_API:
-    GOV_API_URL = os.getenv('REAL_API_URL')
-else:
-    GOV_API_URL = os.getenv('MOCK_API_URL')
 # =======================================================================================
+# Thiết lập nhanh cho môi trường phát triển - KHÔNG an toàn cho production!
+# Tham khảo: https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+
 # Cảnh báo: KHÔNG để lộ secret key khi deploy production
 SECRET_KEY = 'django-insecure-43_hjr6@ele0stdqcr&23^m4)7ehf8f8gc%^%p0&q*fg)$%5!z'
 
-
+# Bật chế độ debug – chỉ dùng khi phát triển, KHÔNG nên bật ở production
+DEBUG = True
 
 # Danh sách các domain có thể truy cập website – để trống trong dev, nhưng cần cấu hình rõ ràng ở production
 ALLOWED_HOSTS = []
@@ -77,24 +63,27 @@ TEMPLATES = [
 WSGI_APPLICATION = 'mysite.wsgi.application'
 # =======================================================================================
 # Cấu hình database (sử dụng SQLite3)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-# =======================================================================================
-# Cấu hình database (sử dụng PostgreSQL)
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',   # Dùng PostgreSQL
-#         'NAME': os.getenv("DB_NAME"),                # Tên database
-#         'USER': os.getenv("DB_USER"),                # Tên user
-#         'PASSWORD': os.getenv("DB_PASSWORD"),        # Mật khẩu
-#         'HOST': os.getenv("DB_HOST"),                # Địa chỉ host (thường là localhost hoặc db container)
-#         'PORT': os.getenv("DB_PORT"),                # Cổng kết nối
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+# =======================================================================================
+# Đọc các biến môi trường từ file .env để bảo mật thông tin kết nối database
+from dotenv import load_dotenv
+load_dotenv() # Tải các biến môi trường từ file .env
+# Cấu hình database (sử dụng PostgreSQL)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',   # Dùng PostgreSQL
+        'NAME': os.getenv("DB_NAME"),                # Tên database
+        'USER': os.getenv("DB_USER"),                # Tên user
+        'PASSWORD': os.getenv("DB_PASSWORD"),        # Mật khẩu
+        'HOST': os.getenv("DB_HOST"),                # Địa chỉ host (thường là localhost hoặc db container)
+        'PORT': os.getenv("DB_PORT"),                # Cổng kết nối
+    }
+}
 # =======================================================================================
 # Cấu hình kiểm tra độ mạnh của mật khẩu
 AUTH_PASSWORD_VALIDATORS = [
