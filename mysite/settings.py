@@ -77,24 +77,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'mysite.wsgi.application'
 # =======================================================================================
 # Cấu hình database (sử dụng SQLite3)
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-# =======================================================================================
-# Cấu hình database (sử dụng PostgreSQL)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',   # Dùng PostgreSQL
-        'NAME': os.getenv("DB_NAME"),                # Tên database
-        'USER': os.getenv("DB_USER"),                # Tên user
-        'PASSWORD': os.getenv("DB_PASSWORD"),        # Mật khẩu
-        'HOST': os.getenv("DB_HOST"),                # Địa chỉ host (thường là localhost hoặc db container)
-        'PORT': os.getenv("DB_PORT"),                # Cổng kết nối
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# =======================================================================================
+# Cấu hình database (sử dụng PostgreSQL)
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',   # Dùng PostgreSQL
+#         'NAME': os.getenv("DB_NAME"),                # Tên database
+#         'USER': os.getenv("DB_USER"),                # Tên user
+#         'PASSWORD': os.getenv("DB_PASSWORD"),        # Mật khẩu
+#         'HOST': os.getenv("DB_HOST"),                # Địa chỉ host (thường là localhost hoặc db container)
+#         'PORT': os.getenv("DB_PORT"),                # Cổng kết nối
+#     }
+# }
 # =======================================================================================
 # Cấu hình kiểm tra độ mạnh của mật khẩu
 AUTH_PASSWORD_VALIDATORS = [
