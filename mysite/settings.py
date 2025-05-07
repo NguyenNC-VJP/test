@@ -15,7 +15,7 @@ dotenv_path = BASE_DIR / f'.env.{env_name}'
 load_dotenv(dotenv_path)
 # =======================================================================================
 # Bật chế độ debug – chỉ dùng khi phát triển, KHÔNG nên bật ở production
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = True
 
 USE_REAL_API = os.getenv('USE_REAL_API', 'false') == 'true'
 
