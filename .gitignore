@@ -1,0 +1,97 @@
+# ========================
+# Python
+# ========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+dist/
+build/
+develop-eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.manifest
+*.spec
+
+# ========================
+# Django
+# ========================
+*.sqlite3
+*.log
+*.pot
+*.pyc
+*.mo
+*.db
+*.db-journal
+*.coverage
+*.cover
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.lcov
+
+# Migrations (có thể giữ lại nếu muốn kiểm soát, nhưng thường loại bỏ khi dev)
+**/migrations/
+**/migrations/*.pyc
+**/migrations/__pycache__/
+
+# Environment & secrets
+.env
+.env.*
+*.env
+*.secret
+secrets.json
+
+# ========================
+# VS Code / IDEs
+# ========================
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# ========================
+# OS-specific
+# ========================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# ========================
+# Virtualenv / Pipenv / Poetry
+# ========================
+venv/
+ENV/
+env/
+.venv/
+Pipfile.lock
+poetry.lock
+
+# ========================
+# Git
+# ========================
+.git/
+
+
+# ========================
+# Docker (nếu dùng)
+# ========================
+*.pid
+*.seed
+docker-compose.override.yml
+
+# ========================
+# Static & Media files (nếu tạo bằng collectstatic trong local)
+# ========================
+/staticfiles/
+/media/
