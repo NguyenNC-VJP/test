@@ -1,0 +1,73 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Cython debug symbols
+cython_debug/
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+# VSCode settings
+.vscode/
+
+# PyCharm
+.idea/
+
+# MyPy
+.mypy_cache/
+
+# Pytest
+.pytest_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
+coverage.xml
+*.cover
+*.py,cover
+
+# Logs
+*.log
+
+# Database
+*.sqlite3
+
+# Local development
+*.db
+instance/
+*.bak
+*.swp
+*.tmp
+
+# Environment variables
+.env
+.env.*
+
+# Docker
+docker-compose.override.yml
+*.pid
+
+# Build directories
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# FastAPI specific (nếu dùng static files tạm)
+staticfiles/
+media/
+
+# Optional: nếu dùng Uvicorn log file
+uvicorn.log
