@@ -45,7 +45,7 @@ instance/
 *.tmp
 
 # Environment variables
-
+.env
 .env.*
 
 # Docker
