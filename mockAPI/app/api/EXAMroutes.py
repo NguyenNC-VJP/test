@@ -171,7 +171,7 @@ async def issue_token(access_key: str = Form(...)):
     # Lấy redirect_url đã lưu từ khi authenticate_provider
     redirect_url = issued_access_keys[access_key]["redirect_url"]
 
-    # Build URL trả về chuẩn 302 như tài liệuAdd commentMore actions
+    # Build URL trả về 302
     redirect_with_param = (
         f"{redirect_url}"
         f"?title=申請者認証（GビズID）"
@@ -183,7 +183,7 @@ async def issue_token(access_key: str = Form(...)):
     issued_access_keys.pop(access_key)
     return RedirectResponse(url=redirect_with_param, status_code=302)
 
-
+# ==========================================================================
 # Giả lập kho access_key
 valid_access_keys = {"mock-access-key-1234567890-0-01"}
 
