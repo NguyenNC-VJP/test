@@ -7,12 +7,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 # Import các module routing đã chuẩn hóa
-from app.api.routes import (
-    authenticate_provider,   # 民間サービス事業者認証 API
-    gbizid_login,            # GビズID申請者認証 API
-    submit_application,      # 申請データ送信 API
-    inquiry_reference_number # 申請受付番号確認
-)
+from app.api.routes.accounts import authenticate_provider, gbizid_login
+from app.api.routes.apply import submit_application
+from app.api.routes.inquiries import reference_number 
 
 # ========================
 # Khởi tạo FastAPI App Instance
@@ -39,4 +36,4 @@ app.add_middleware(
 app.include_router(authenticate_provider.router)
 app.include_router(gbizid_login.router)
 app.include_router(submit_application.router)
-app.include_router(inquiry_reference_number.router)
+app.include_router(reference_number.router)
