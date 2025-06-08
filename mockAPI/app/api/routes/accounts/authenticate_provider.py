@@ -35,7 +35,7 @@ async def authenticate_provider_api(
     title = "民間サービス事業者認証"
 
     try:
-        # ✅ Validate business logic mock (giả lập validate account fixed)
+        # Validate business logic mock (giả lập validate account fixed)
         if id != "test_provider_123" or password != "super_secret": 
             # Trường hợp 認証エラー → trả về HTTP 403 kèm lỗi chuẩn hóa
             return build_error_response(
@@ -45,13 +45,13 @@ async def authenticate_provider_api(
                 href=href
             )
 
-        # ✅ Sinh access_key A nếu login hợp lệ
+        # Sinh access_key A nếu login hợp lệ
         access_key_a = f"{uuid.uuid4()}-key1"
 
-        # ✅ Insert access_key A vào mock DB stateful
+        # Insert access_key A vào mock DB stateful
         save_access_key(db, access_key_a, redirect_url)
 
-        # ✅ Build response body mock chuẩn giống tài liệu production spec
+        # Build response body mock chuẩn giống tài liệu production spec
         response = {
             "metadata": {
                 "title": title,
