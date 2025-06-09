@@ -4,10 +4,12 @@
 
 from fastapi import APIRouter, Form, Request, Depends
 from sqlalchemy.orm import Session
+import traceback
 
 # Import các module utils chuẩn hóa mock
 from app.utils.error_response_builder import build_error_response
 from app.utils.common_error_response import build_internal_server_error
+from fastapi.responses import JSONResponse 
 from app.utils.database import get_db
 from app.utils.access_key_utils import save_access_key
 
@@ -35,6 +37,7 @@ async def authenticate_provider_api(
     title = "民間サービス事業者認証"
 
     try:
+        print(f"Received form: id={id}, password={password}, redirect_url={redirect_url}, auth_method={authentication_method}")
         # Validate business logic mock (giả lập validate account fixed)
         if id != "test_provider_123" or password != "super_secret": 
             # Trường hợp 認証エラー → trả về HTTP 403 kèm lỗi chuẩn hóa
@@ -47,6 +50,9 @@ async def authenticate_provider_api(
 
         # Sinh access_key A nếu login hợp lệ
         access_key_a = f"{uuid.uuid4()}-key1"
+
+        print(f"Access Key Generated: {access_key_a}")
+
 
         # Insert access_key A vào mock DB stateful
         save_access_key(db, access_key_a, redirect_url)
@@ -66,8 +72,11 @@ async def authenticate_provider_api(
                 "access_key": access_key_a
             }
         }
-        return response
+        
+        return JSONResponse(content=response, media_type="application/json")    
 
     except Exception:
+        print("Lỗi thật phía backend:")
+        traceback.print_exc()
         # Nếu xảy ra lỗi hệ thống bất ngờ → trả về InternalServerError chuẩn hóa
         return build_internal_server_error(href=href, title=title)

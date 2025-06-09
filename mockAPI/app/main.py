@@ -11,6 +11,11 @@ from app.api.routes.accounts import authenticate_provider, gbizid_login
 from app.api.routes.apply import submit_application
 from app.api.routes.inquiries import reference_number 
 
+from app.models.mock_access_keys import Base
+from app.utils.database import engine
+
+
+
 # ========================
 # Khởi tạo FastAPI App Instance
 # ========================
@@ -20,6 +25,7 @@ app = FastAPI(
     version="1.0"
 )
 
+Base.metadata.create_all(bind=engine)
 # ========================
 # Setup CORS Middleware (cho phép FE local call API dễ dàng)
 # ========================
