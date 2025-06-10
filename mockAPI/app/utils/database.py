@@ -5,6 +5,7 @@ Database Session utils dùng chung cho mock DB
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from app.models.mock_reference_status import Base, MockReferenceStatus
 
 # ======================
 # Database Config (Mock専用 SQLite)
@@ -17,6 +18,8 @@ SQLALCHEMY_DATABASE_URL = "sqlite:///./mock_db.sqlite3"
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
+
+Base.metadata.create_all(bind=engine)
 
 # Session Factory tạo ra DB Session cho mỗi request
 SessionLocal = sessionmaker(
