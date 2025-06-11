@@ -3,13 +3,8 @@ Model table dùng để lưu trữ tạm access_key mock (production-ready state
 """
 
 from sqlalchemy import Column, String, DateTime, Integer
-from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime, timedelta, timezone
-
-# ========================
-# Khởi tạo Base ORM Model cho SQLAlchemy
-# ========================
-Base = declarative_base()
+from app.models import Base
 
 # ========================
 # Định nghĩa timezone JST (日本標準時)

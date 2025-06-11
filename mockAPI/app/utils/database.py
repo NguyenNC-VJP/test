@@ -5,8 +5,14 @@ Database Session utils dùng chung cho mock DB
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.models.mock_reference_status import Base, MockReferenceStatus
-
+from app.models import Base
+from app.models import (
+    mock_access_keys,
+    mock_reference_status,
+    mock_application_status,
+    mock_message,
+    mock_document
+)
 # ======================
 # Database Config (Mock専用 SQLite)
 # ======================

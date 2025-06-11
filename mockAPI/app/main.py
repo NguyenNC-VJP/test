@@ -10,6 +10,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes.accounts import authenticate_provider, gbizid_login
 from app.api.routes.apply import submit_application
 from app.api.routes.inquiries import reference_number 
+from app.api.routes.inquiries import list_applications
+from app.api.routes.inquiries import message_application, document_application
+
 
 from app.models.mock_access_keys import Base
 from app.utils.database import engine
@@ -43,3 +46,6 @@ app.include_router(authenticate_provider.router)
 app.include_router(gbizid_login.router)
 app.include_router(submit_application.router)
 app.include_router(reference_number.router)
+app.include_router(list_applications.router)
+app.include_router(message_application.router)
+app.include_router(document_application.router)

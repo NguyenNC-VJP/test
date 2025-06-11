@@ -1,53 +1,96 @@
 # app/api/routes/inquiries/reference_number.py
+"""
+申請受付番号確認API (Mock)
+-------------------------------------------------------
+Spec : 別紙7 申請受付番号確認API仕様 1.64
+Flow :
+  1. Access-Key (A/B) check
+  2. 仮受付番号(20桁) check
+  3. polling count < 3  → 処理中
+  4. polling count >=3 → 完了 & 受付番号(17桁)返却
+"""
 
+import uuid
 from fastapi import APIRouter, Header, Query, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from app.utils.access_key_utils import is_valid_access_key
+
 from app.utils.database import get_db
+from app.utils.access_key_utils import is_valid_access_key
+from app.utils.error_response_builder import build_error_response
 from app.models.mock_reference_status import MockReferenceStatus
-import uuid
 
-router = APIRouter()
+router = APIRouter(prefix="/inquiries", tags=["Inquiries - Reference Check"])
 
-@router.get("/inquiries/reference_number")
+# ----------------------------------------------------------------------
+@router.get("/reference_number")
 def inquiry_reference_number(
-    reference_number: str = Query(...),
-    x_access_key: str = Header(None, alias="X-Access-Key"),
+    temporary_reference_number: str = Query(
+        ...,
+        min_length=20,
+        max_length=20,
+        description="仮受付番号 (20桁)"
+    ),
+    x_access_key: str = Header(..., alias="X-Access-Key"),
     db: Session = Depends(get_db)
 ):
-    # ① Validate access key
-    if not x_access_key or not is_valid_access_key(x_access_key):
-        return JSONResponse(status_code=403, content={"detail": "アクセスキーが無効です。"})
+    # ① Access-Key validation (A または B)
+    if not is_valid_access_key(x_access_key):
+        return build_error_response(
+            http_status=403,
+            title="申請受付番号確認",
+            detail="アクセスキーが無効です。",
+            href=f"/inquiries/reference_number/{temporary_reference_number}"
+        )
 
-    # ② Validate reference number format
-    if not reference_number or len(reference_number) != 20:
-        return JSONResponse(status_code=400, content={"detail": "受付番号の形式が不正です。"})
+    # ② 仮受付番号 format check
+    if not temporary_reference_number.isdigit():
+        return build_error_response(
+            http_status=400,
+            title="申請受付番号確認",
+            detail="入力エラーが発生しました。",
+            href=f"/inquiries/reference_number/{temporary_reference_number}",
+            errors=[{
+                "code": "E0002",
+                "message": "仮受付番号は半角数字で設定してください。"
+            }]
+        )
 
-    # ③ Tìm hoặc tạo mới trạng thái polling trong DB
-    record = db.query(MockReferenceStatus).filter_by(reference_number=reference_number).first()
-    if not record:
-        record = MockReferenceStatus(reference_number=reference_number)
-        db.add(record)
+    # ③ 取得 or 新規 Insert polling state
+    rec = (
+        db.query(MockReferenceStatus)
+          .filter_by(reference_number=temporary_reference_number)
+          .first()
+    )
+    if not rec:
+        rec = MockReferenceStatus(
+            reference_number=temporary_reference_number,
+            poll_count=0
+        )
+        db.add(rec)
         db.commit()
 
-    # ④ Cập nhật số lần polling
-    record.poll_count += 1
+    # ④ 増分 polling
+    rec.poll_count += 1
     db.commit()
 
-    # ⑤ Giả lập delay (chưa xử lý xong)
-    if record.poll_count < 3:
+    # --------------------- build common parts --------------------------
+    def _meta(detail: str):
+        return {
+            "title":  "申請受付番号確認",
+            "detail": detail,
+            "access_key": f"{uuid.uuid4()}-0-01"
+        }
+
+    self_href = f"/inquiries/reference_number/{temporary_reference_number}"
+
+    # ⑤ poll_count < 3  → 処理中
+    if rec.poll_count < 3:
         return JSONResponse(
             status_code=200,
             content={
-                "metadata": {
-                    "title": "申請受付番号確認",
-                    "detail": "申請データの受付処理を行っています。",
-                    "access_key": f"{uuid.uuid4()}-0-01"
-                },
-                "_links": {
-                    "self": {"href": "/inquiries/reference_number"}
-                },
+                "metadata": _meta("申請データの受付処理を行っています。"),
+                "_links": {"self": {"href": self_href}},
                 "result": {
                     "reference_number": None,
                     "finished": False
@@ -55,20 +98,14 @@ def inquiry_reference_number(
             }
         )
 
-    # ⑥ Khi đủ poll count thì xem là hoàn tất
+    # ⑥ 完了ケース
     return JSONResponse(
         status_code=200,
         content={
-            "metadata": {
-                "title": "申請受付番号確認",
-                "detail": "申請の受付が完了しました。",
-                "access_key": f"{uuid.uuid4()}-0-01"
-            },
-            "_links": {
-                "self": {"href": "/inquiries/reference_number"}
-            },
+            "metadata": _meta("申請の受付が完了しました。"),
+            "_links": {"self": {"href": self_href}},
             "result": {
-                "reference_number": reference_number[:17],
+                "reference_number": temporary_reference_number[:17],  # 受付番号
                 "finished": True
             }
         }
